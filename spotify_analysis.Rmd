@@ -1,0 +1,35 @@
+---
+title: "Compte rendu analyse Spotify"
+author: "MAHI Riad & Jérôme GAMBIEZ"
+date: "Mise à jour, le 5 Mai 2023"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+# Récupération et traitement des données de spotify
+
+Les sources des documents proviennent du téléchargement sur le site Kaggle.com, le lien des jeux de données sont:
+https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
+```{r}
+  spotifyDataPath <- "./Spotify_Youtube.csv"
+  data <- read.csv(spotifyDataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
+  ggplot(data_clean, aes(x = Energy, y = Loudness)) + 
+  geom_point() + 
+  theme_bw() + 
+  labs(title = "Relation entre Energy et Loudness", x = "Energy", y = "Loudness") +
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
+  scale_y_continuous(limits = c(-30, 0), breaks = seq(-30, 0, 5))
+
+  ggplot(data_clean, aes(x = Energy, y = Stream, color = "Stream")) + 
+  geom_point() + 
+  theme_bw() + 
+  labs(title = "Relation entre Energy et Stream", x = "Energy", y = "Stream") +
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
+  scale_y_continuous(limits = c(0, 50000000), breaks = seq(0, 50000000, 10000000)) +
+  scale_color_manual(values = c("Stream" = "blue"))
+```
+
+

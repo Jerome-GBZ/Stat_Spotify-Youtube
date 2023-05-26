@@ -1,7 +1,7 @@
 ---
-title: "Compte rendu analyse Spotify"
+title: "Projet Calcul Financier & Statistique : En avant la musique !"
 author: "MAHI Riad & Jérôme GAMBIEZ"
-date: "Mise à jour, le 5 Mai 2023"
+date: "Mise à jour, le 25 Mai 2023"
 output:
   pdf_document:
     toc: yes
@@ -9,27 +9,85 @@ output:
     toc: yes
 ---
 
-# Récupération et traitement des données de spotify
+## 1. Introduction
 
-Les sources des documents proviennent du téléchargement sur le site Kaggle.com, le lien des jeux de données sont:
+La source de notre jeu de donnée provient du site Kaggle.com: \newline
 https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
-```{r}
-  spotifyDataPath <- "./Spotify_Youtube.csv"
-  data <- read.csv(spotifyDataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
-  ggplot(data_clean, aes(x = Energy, y = Loudness)) + 
-  geom_point() + 
-  theme_bw() + 
-  labs(title = "Relation entre Energy et Loudness", x = "Energy", y = "Loudness") +
-  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
-  scale_y_continuous(limits = c(-30, 0), breaks = seq(-30, 0, 5))
 
-  ggplot(data_clean, aes(x = Energy, y = Stream, color = "Stream")) + 
-  geom_point() + 
-  theme_bw() + 
-  labs(title = "Relation entre Energy et Stream", x = "Energy", y = "Stream") +
-  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
-  scale_y_continuous(limits = c(0, 50000000), breaks = seq(0, 50000000, 10000000)) +
-  scale_color_manual(values = c("Stream" = "blue"))
+Dernière mise à jour du jeu de donnée: Mars 2023 \newline
+Création: Février 2023 \newline
+
+Nous avons sélectionné, dans le cadre du projet Calcul Financier & Statistique, un jeu de données provenant des plateformes de streaming musical Spotify et YouTube. Nous avons spécifiquement choisi ce jeu de données en raison de l'impact qu'ont ces applications sur la vie quotidienne de millions d'utilisateurs à travers le monde. Étant donné que ces applications sont utilisées par une population provenant de divers pays, notre échantillon ne représente pas une zone géographique spécifique.
+
+
+Question à mettre en place:
+  - Est-ce l'energie et la dansabilité d'une musique ont une relation ? 
+  - Est-ce l'énergie d'une musique à un impact sur la sensibilité d'un utilisateur à aimer la musique.
+  - Même question pour la dansabilité?
+
+Mise en place du jeu de donnée:
+```{r}
+  dataPath <- "./Spotify_Youtube.csv"
+  data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
 ```
 
+Les variables qualitatives sont les variables:
+  - Les noms des artistes
+  - Si la musique à été publiée comme un album ou un signle
+
+Les variables quantitatives sont:
+  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique
+  - l'énergie que la musique à definir!
+  
+
+## 2. Analyse univariée
+
+### Répartitions de la variable qualitative "type album"
+```{r}
+library(ggplot2)
+
+album_type <- table(data$Album_type)
+df <- as.data.frame(album_type)
+df <- df[order(df$Freq, decreasing = TRUE), ]
+# Générer le pie chart
+pie_chart <- ggplot(df, aes(x = "", y = Freq, fill = Var1)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "Répartition des types d'albums", fill = "Type d'album") +
+  theme_void() +
+  geom_text(aes(label = Freq), position = position_stack(vjust = 0.5), size = 4)
+
+# Afficher le pie chart
+print(pie_chart)
+```
+### Répartitions de la variable qualitative noms des artistes
+
+```{r}
+library(ggplot2)
+
+# Filtrer les vues supérieures à 100 millions
+views_above_100m <- data[data$Views > 100000000, "views"]
+
+# Compter le nombre de chansons pour chaque catégorie de vues
+view_counts <- table(views_above_100m)
+
+view_counts
+````
+
+
+
+# Générer le pie chart
+pie_chart <- ggplot(data.frame(values = view_counts), aes(x = "", y = values, fill = names(view_counts))) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "Répartition des vues > 100 millions") +
+  theme_minimal() +
+  geom_text(aes(label = values), position = position_stack(vjust = 0.5), size = 4)
+
+# Afficher le pie chart
+print(pie_chart)
+
+
+
+  
 

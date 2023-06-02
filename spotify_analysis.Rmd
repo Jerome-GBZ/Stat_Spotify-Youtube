@@ -32,13 +32,25 @@ Mise en place du jeu de donnée:
 ```
 
 Les variables qualitatives sont les variables:
-  - Les noms des artistes
-  - Si la musique à été publiée comme un album ou un signle
+  - Si la musique à été publiée comme un album ou un single
+  - La fréquence d'écoute d'un titre
+
+
+  1. Peu écouté : Cette catégorie désigne les chansons qui ont reçu un nombre de vues inférieur ou égal à 100 millions. Cela signifie que ces chansons ont été relativement moins populaires ou ont été moins diffusées en comparaison avec d'autres chansons.
+  
+  2. Moyen écouté : Cette catégorie concerne les chansons qui ont reçu un nombre de vues compris entre 100 millions et 500 millions. Ces chansons peuvent être considérées comme ayant une popularité moyenne ou une diffusion modérée par rapport à d'autres chansons.
+  
+  3. Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
+
 
 Les variables quantitatives sont:
   - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique
   - l'énergie que la musique à definir!
   
+
+La classification en "peu écouté", "moyen écouté" et "très écouté" est basée sur le nombre d'écoute d'un titre :
+  
+
 
 ## 2. Analyse univariée
 
@@ -63,31 +75,83 @@ print(pie_chart)
 ### Répartitions de la variable qualitative noms des artistes
 
 ```{r}
-library(ggplot2)
+library(dplyr)
 
-# Filtrer les vues supérieures à 100 millions
-views_above_100m <- data[data$Views > 100000000, "views"]
+# Créer des catégories en fonction du nombre de vues
+data <- data %>%
+  mutate(Freq_listen = case_when(
+    data$Views <= 100000000 ~ "peu écouté",
+    data$Views > 100000000 & data$Views <= 500000000 ~ "moyen écouté",
+    data$Views > 500000000 ~ "très écouté",
+    TRUE ~ NA_character_
+  ))
 
-# Compter le nombre de chansons pour chaque catégorie de vues
-view_counts <- table(views_above_100m)
+# Créer un tableau de comptage par catégorie d'écoute
+ecoute_counts <- table(data$Freq_listen)
 
-view_counts
-````
+# Convertir le tableau en data frame
+ecoute_df <- as.data.frame(ecoute_counts)
+ecoute_df <- ecoute_df[order(ecoute_df$Freq, decreasing = TRUE), ]
 
-
-
-# Générer le pie chart
-pie_chart <- ggplot(data.frame(values = view_counts), aes(x = "", y = values, fill = names(view_counts))) +
+# Générer le bar plot
+bar_plot <- ggplot(ecoute_df, aes(x = "", y = Freq, fill = Var1)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
-  labs(title = "Répartition des vues > 100 millions") +
+  labs(title = "Répartition par catégorie d'écoute", fill = "Catégorie d'écoute") +
+  theme_void() +
+  geom_text(aes(label = Freq), position = position_stack(vjust = 0.5), size = 4)
+
+# Afficher le bar plot
+print(bar_plot)
+```
+
+
+```{r}
+# Générer l'histogramme à barres
+bar_histogram <- ggplot(ecoute_df, aes(x = Var1, y = Freq, fill = Var1)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  labs(title = "Répartition par catégorie d'écoute", x = "Catégorie d'écoute", y = "Fréquence") +
   theme_minimal() +
-  geom_text(aes(label = values), position = position_stack(vjust = 0.5), size = 4)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_discrete(name = "Catégorie d'écoute")
 
-# Afficher le pie chart
-print(pie_chart)
+# Afficher l'histogramme à barres
+print(bar_histogram)
+```
+
+### Représentation graphique de la dancabilité d'une musique
+Cela représente la probabilité de dancer sur une musique
+```{r}
+data$Danceability
+
+# Créer un boxplot de la dançabilité
+boxplot <- ggplot(data, aes(y = data$Danceability)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Distribution de la dançabilité", y = "Dançabilité") +
+  theme_minimal()
+
+# Afficher le boxplot
+print(boxplot)
+```
 
 
 
+
+
+Les variables quantitatives sont:
+  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique
+  - l'énergie que la musique à definir!
+````{r}
+#var(duration)  # Variance
+#mean(v)    # Moyenne 
+
+````
+  
+  
+  
+  
+  
+  
+  
   
 

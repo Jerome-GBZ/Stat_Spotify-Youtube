@@ -143,8 +143,19 @@ boxplot <- ggplot(data, aes(y = data$Energy)) +
   theme_minimal()
 print(boxplot)
 ```
+L'analyse du diagramme en boîte à moustaches révèle plusieurs informations importantes concernant l'énergie des morceaux de musique. Plus l'énergie est proche de 1.0, plus elle est rapides, fortes et bruyantes.
 
+En examinant les différentes parties du diagramme, nous pouvons constater que la médiane à 0.75. On peut donc conclure 75% des morceaux analysés présentent une énergie relativement élevée supérieur à 0.67.
 
+La boîte à moustaches indique également que 25% des morceaux ont une énergie supérieure à 0,87, ce qui suggère une intensité, une vitesse et un niveau sonore plus élevés. Ces morceaux pourraient correspondre à des genres musicaux tels que le rock, le metal ou d'autres styles de musique agressifs et dynamiques. On retrouve des groupes comme Metallica ou Red Hot Chili Peppers.
+
+D'autre part, 25% des morceaux ont une énergie inférieure à 0,66, ce qui indique une énergie plus basse. Ces morceaux pourraient être plus calmes, plus lents et moins bruyants. On retrouve le musicien Coldlay qui propose des musiques appelé Soft rock.
+
+**Conclusion des deux moustaches**
+
+En analysant les deux diagrammes ensemble, nous pouvons effectivement observer une corrélation entre la danceability et l'énergie des morceaux de musique. Il semble y avoir une tendance où les morceaux ayant une forte danceability ont également une énergie élevée, supérieure à 0,65.
+
+En se basant sur cette observation, il est intéressant de noter que les musiques les plus dansantes sont celles de 50 Cent, un artiste de hip-hop/rap. Ses morceaux ont une énergie se situant entre 0,65 et 0,75, ce qui correspond à une intensité sonore élevée et une propension à inciter les auditeurs à se déplacer et à danser.
 ## Estimation et intervalles de confiance
 
 **Analyse de la dancabilité**
@@ -174,7 +185,7 @@ mean(energie)
 
 par(mfrow=c(1,2))
 hist(energie , main="repartition de la temperature à9h ",xlab="energie",prob=T)
-points(seq(0,30,0.5),dnorm(seq(0,30,0.5),mean(energie),sd(energie)),col=2,type="l")
+points(seq(0,30,0.01),dnorm(seq(0,30,0.01),mean(energie),sd(energie)),col=2,type="l")
 qqnorm(energie)
 abline(mean(energie),sd(energie),col=2)
 interval=t.test(energie)

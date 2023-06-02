@@ -43,14 +43,13 @@ Les variables qualitatives sont les variables:
   3. Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
 
 
-Les variables quantitatives sont:
-  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique
-  - l'énergie que la musique à definir!
-  
+Les variables quantitatives sont:\newline \newline
+  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique    \newline  \newline
+  - L'énergie est une mesure allant de 0.0 à 1.0 et représente une mesure perceptuelle de l'intensité et de l'activité dans le domaine de la musique. Typiquement, les morceaux énergiques sont ressentis comme étant rapides, bruyants et animés. Par exemple, le death metal est caractérisé par une énergie élevée, avec ses rythmes rapides, ses guitares lourdes et ses voix agressives, tandis qu'un prélude de Bach est souvent considéré comme ayant une énergie plus basse, avec ses lignes mélodiques douces et son atmosphère plus calme.
 
-La classification en "peu écouté", "moyen écouté" et "très écouté" est basée sur le nombre d'écoute d'un titre :
-  
+Les caractéristiques perceptuelles qui contribuent à cet attribut d'énergie incluent la plage dynamique, c'est-à-dire la variation entre les niveaux sonores forts et faibles, la loudness perçue, qui correspond à la sensation de volume sonore, le timbre qui donne la qualité sonore spécifique d'un instrument ou d'une voix, le taux de début qui fait référence à la rapidité avec laquelle les sons commencent et se développent, et la densité qui décrit la quantité et l'occupation de l'espace sonore par différents éléments.
 
+En somme, l'énergie musicale est une mesure subjective qui nous aide à évaluer et à caractériser le niveau d'intensité et d'activité ressenties dans un morceau de musique.
 
 ## 2. Analyse univariée
 
@@ -119,7 +118,7 @@ bar_histogram <- ggplot(ecoute_df, aes(x = Var1, y = Freq, fill = Var1)) +
 print(bar_histogram)
 ```
 
-### Représentation graphique de la dancabilité d'une musique
+### Représentation graphique de la répartition
 
 **Dancabilité**
 ```{r}
@@ -130,22 +129,57 @@ boxplot <- ggplot(data, aes(y = data$Danceability)) +
 print(boxplot)
 ```
 
-D'après le diagramme boîte à moustaches, on constate que la majorité des musiques, soit environ 58 %, ont pour effet de faire danser les personnes qui les écoutent. Par ailleurs, il est intéressant de noter que seulement 25 % des musiques ont un effet dansant sur 70 % de la population. Enfin, on peut également observer que 50 % des musiques ont un effet dansant sur une personne sur deux. En d'autres termes, on peut dire que la musique a un effet dansant variable en fonction des individus, mais que la majorité des musiques ont un effet dansant sur une grande partie de la population.
+En examinant le diagramme, on peut constater que la majorité des musiques analysées, soit environ 58 %, ont une danceability élevée. Cela indique que ces morceaux sont adaptés à la danse et ont un potentiel élevé pour inciter les gens à se déplacer et à bouger sur la piste de danse.
+
+De plus, le diagramme révèle que 25 % des musiques ont un effet dansant sur environ 70 % de la population. Cela suggère que ces morceaux sont particulièrement accrocheurs et entraînants, capables d'engager un large public et de susciter l'envie de danser chez une majorité de personnes.
+
+Enfin, il est intéressant de noter que 50 % des musiques ont un effet dansant sur une personne sur deux. Cela signifie que la danceability de ces morceaux est plus subjective et peut varier d'une personne à l'autre. Certains individus peuvent ressentir une forte envie de danser en les écoutant, tandis que d'autres peuvent ne pas être aussi réceptifs à leur effet dansant. 
 
 **Énergie**
 ```{r}
-# Créer un boxplot de la dançabilité
 boxplot <- ggplot(data, aes(y = data$Energy)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
   theme_minimal()
-
-# Afficher le boxplot
 print(boxplot)
 ```
 
-  
-  
+
+## Estimation et intervalles de confiance
+
+**Analyse de la dancabilité**
+``` {r}
+
+dancabilite  <- data$Danceability
+energie <- data$Energy
+
+var(dancabilite)
+mean(dancabilite)
+
+par(mfrow=c(1,2))
+hist(dancabilite , main="repartition de la temperature à9h ",xlab="dancabilite",prob=T)
+points(seq(0,30,0.5),dnorm(seq(0,30,0.5),mean(dancabilite),sd(dancabilite)),col=2,type="l")
+qqnorm(dancabilite)
+abline(mean(dancabilite),sd(dancabilite),col=2)
+interval=t.test(dancabilite)
+interval$conf.int
+```
+
+
+**Analyse de l'energie**
+``` {r}
+var(energie)
+mean(energie)
+
+
+par(mfrow=c(1,2))
+hist(energie , main="repartition de la temperature à9h ",xlab="energie",prob=T)
+points(seq(0,30,0.5),dnorm(seq(0,30,0.5),mean(energie),sd(energie)),col=2,type="l")
+qqnorm(energie)
+abline(mean(energie),sd(energie),col=2)
+interval=t.test(energie)
+interval$conf.int
+```
   
   
   

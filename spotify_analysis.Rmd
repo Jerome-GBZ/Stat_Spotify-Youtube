@@ -120,32 +120,30 @@ print(bar_histogram)
 ```
 
 ### Représentation graphique de la dancabilité d'une musique
-Cela représente la probabilité de dancer sur une musique
-```{r}
-data$Danceability
 
-# Créer un boxplot de la dançabilité
+**Dancabilité**
+```{r}
 boxplot <- ggplot(data, aes(y = data$Danceability)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de la dançabilité", y = "Dançabilité") +
+  theme_minimal()
+print(boxplot)
+```
+
+D'après le diagramme boîte à moustaches, on constate que la majorité des musiques, soit environ 58 %, ont pour effet de faire danser les personnes qui les écoutent. Par ailleurs, il est intéressant de noter que seulement 25 % des musiques ont un effet dansant sur 70 % de la population. Enfin, on peut également observer que 50 % des musiques ont un effet dansant sur une personne sur deux. En d'autres termes, on peut dire que la musique a un effet dansant variable en fonction des individus, mais que la majorité des musiques ont un effet dansant sur une grande partie de la population.
+
+**Énergie**
+```{r}
+# Créer un boxplot de la dançabilité
+boxplot <- ggplot(data, aes(y = data$Energy)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
   theme_minimal()
 
 # Afficher le boxplot
 print(boxplot)
 ```
 
-
-
-
-
-Les variables quantitatives sont:
-  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique
-  - l'énergie que la musique à definir!
-````{r}
-#var(duration)  # Variance
-#mean(v)    # Moyenne 
-
-````
   
   
   

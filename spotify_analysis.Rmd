@@ -198,9 +198,21 @@ hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="Danceability
 hist(data$Danceability[data$Freq_listen == "très écouté"], main="Danceability pour une fréquence d'écoute très souvent", xlab="Danceability", ylab="Fréquence")
 ```
 
-• Calculer le rapport de corrélations. Commenter.
+• Calculer le rapport de corrélations.
 ```{r}
-cor.test(data$Danceability, data$Freq_listen)
-#Error in cor.test.default(data$Danceability, data$Freq_listen) : 'y' must be a numeric vector
+# Convert Freq_listen to a factor
+data$Freq_listen_numeric <- factor(data$Freq_listen)
 
+# Convert Freq_listen to numeric
+data$Freq_listen_numeric <- as.numeric(data$Freq_listen_numeric)
+
+# Calculate correlation
+correlation <- cor(data$Danceability, data$Freq_listen_numeric, use = "pairwise.complete.obs")
+
+correlation
 ```
+Le résultat obtenu pour la corrélation entre la danseabilité des morceaux de musique et leur fréquence d'écoute est de -0.0513819. Ce coefficient de corrélation suggère une faible relation négative entre ces deux variables.
+
+Cela signifie que, d'après les données analysées, il n'existe qu'une très légère tendance indiquant que plus un morceau de musique est écouté fréquemment, moins il est susceptible d'être dansant. Cependant, il est important de noter que cette corrélation est proche de zéro, ce qui suggère qu'il n'y a pas de relation linéaire significative entre la danseabilité et la fréquence d'écoute des morceaux.
+
+Ce résultat suggère qu'il y a pas de preuve pour dire qu'une fréquence d'écoute élevée soit directement liée à une danseabilité. 

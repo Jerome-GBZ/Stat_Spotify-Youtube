@@ -216,3 +216,25 @@ Le résultat obtenu pour la corrélation entre la danseabilité des morceaux de 
 Cela signifie que, d'après les données analysées, il n'existe qu'une très légère tendance indiquant que plus un morceau de musique est écouté fréquemment, moins il est susceptible d'être dansant. Cependant, il est important de noter que cette corrélation est proche de zéro, ce qui suggère qu'il n'y a pas de relation linéaire significative entre la danseabilité et la fréquence d'écoute des morceaux.
 
 Ce résultat suggère qu'il y a pas de preuve pour dire qu'une fréquence d'écoute élevée soit directement liée à une danseabilité. 
+
+
+
+• Faire le test d’égalité des moyennes. Spécifier les hypothèses. Conclure ?
+
+Hypothèses :
+
+Hypothèse nulle (H0) : Il n'y a pas de différence significative entre les moyennes des groupes de fréquence d'écoute.
+
+Hypothèse alternative (H1) : Il existe une différence significative entre au moins deux des moyennes des groupes de fréquence d'écoute.
+
+```{r}
+# Effectuer le test d'ANOVA
+model <- aov(Danceability ~ Freq_listen, data = data)
+
+# Résumé des résultats
+summary(model)
+````
+
+Nous avons utilisé un seuil de signification de 0,05 pour évaluer la différence entre les groupes. La valeur p calculée pour notre test est de 0,723, ce qui est supérieur à notre seuil de signification. Cela signifie que nous n'avons pas trouvé suffisamment de preuves statistiques pour rejeter l'hypothèse nulle.
+
+Nos résultats indiquent qu'il n'y a pas de différence significative dans la danseabilité des morceaux de musique en fonction de la fréquence d'écoute. Autrement dit, que les morceaux soient peu écoutés, moyennement écoutés ou très écoutés, cela n'a pas d'impact statistiquement significatif sur leur danseabilité.

@@ -20,6 +20,7 @@ https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 ```{r}
   library(ggplot2)
   library(dplyr)
+
   dataPath <- "./Spotify_Youtube.csv"
   data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
 ```
@@ -93,7 +94,7 @@ On peut constater que nos fréquences d'écoutes sur les différents titres de n
 ### Représentation graphique de la répartition
 
 **Dancabilité**
-``` {r}
+```{r}
 
 boxplot_danceability <- ggplot(data, aes(y = Danceability) +
   geom_boxplot(fill = "lightblue", color = "black") +
@@ -111,7 +112,7 @@ Enfin, il est intéressant de noter que 50 % des musiques ont un effet dansant s
 
 **Énergie**
 
-``` {r}
+```{r}
 boxplot_energy <- ggplot(data, aes(y = Energy)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
@@ -134,10 +135,8 @@ En se basant sur cette observation, il est intéressant de noter que les musique
 ## Estimation et intervalles de confiance
 
 **Analyse de la dancabilité**
-``` {r}
-
+```{r}
 dancabilite  <- data$Danceability
-energie <- data$Energy
 
 var(dancabilite)
 mean(dancabilite)
@@ -156,7 +155,9 @@ L'histogramme représente la répartition de la danceability des morceaux de mus
 
 
 **Analyse de l'energie**
-``` {r}
+```{r}
+energie <- data$Energy
+
 var(energie)
 mean(energie)
 
@@ -173,6 +174,26 @@ interval$conf.int
   
   
   
-  
-  
+## 3. Analyse multivariée
 
+### Analyse quanti x quali
+Nous avons choisi de prendre comme varaible quantitative **la dancabilité** et comme qualitative la **fréquence d'écoute d'un titre**.
+
+• Donner les résumés statistiques, histogrammes et/ou bloxplot par sous-population.
+```{r}
+boxplot(data$Danceability ~ data$Freq_list, main="Danceability en fonction de la fréquence d'écoute", xlab="Fréquence d'écoute", ylab="Danceability")
+```
+
+```{r}
+summary(data$Danceability[data$Freq_list == "peu écouté"])
+summary(data$Danceability[data$Freq_list == "moyen écouté"])
+summary(data$Danceability[data$Freq_list == "très écouté"])
+```
+
+```{r} 
+hist(data$Danceability[data$Freq_listen == "peu écouté"], main="Danceability pour une fréquence d'écoute parfois", xlab="Danceability", ylab="Fréquence")
+
+hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="Danceability pour une fréquence d'écoute souvent", xlab="Danceability", ylab="Fréquence")
+
+hist(data$Danceability[data$Freq_listen == "très écouté"], main="Danceability pour une fréquence d'écoute très souvent", xlab="Danceability", ylab="Fréquence")
+```

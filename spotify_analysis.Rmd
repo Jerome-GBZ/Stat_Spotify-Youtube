@@ -8,75 +8,42 @@ output:
   html_document:
     toc: yes
 ---
-
 ## 1. Introduction
+
+Pour ce devoir de stastique nous avons choisi un sujet un peu original qui est d'utiliser des musiques provenant de site de streaming connu comme Spotify ou encore Youtube. Notre travail va être d'analyser un jeu de donnée de 50 titres parmis les 5 artistes les plus connus des plateforme afin d'en déduire une analyse sur des questions qu'on a pu se poser notamment la corrélation entre genre en dancabilité. En effet, plusieurs questions nous sont venu lors de la première étude du jeu de donnée mais également en cours de route notammen, est-ce l'energie et la dansabilité d'une musique ont une relation ? Est-ce l'énergie d'une musique à un impact sur la sensibilité d'un utilisateur à aimer la musique ? Même question pour la dansabilité?   \newline
 
 La source de notre jeu de donnée provient du site Kaggle.com: \newline
 https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 
-Dernière mise à jour du jeu de donnée: Mars 2023 \newline
-Création: Février 2023 \newline
 
-Nous avons sélectionné, dans le cadre du projet Calcul Financier & Statistique, un jeu de données provenant des plateformes de streaming musical Spotify et YouTube. Nous avons spécifiquement choisi ce jeu de données en raison de l'impact qu'ont ces applications sur la vie quotidienne de millions d'utilisateurs à travers le monde. Étant donné que ces applications sont utilisées par une population provenant de divers pays, notre échantillon ne représente pas une zone géographique spécifique.
-
-
-Question à mettre en place:
-  - Est-ce l'energie et la dansabilité d'une musique ont une relation ? 
-  - Est-ce l'énergie d'une musique à un impact sur la sensibilité d'un utilisateur à aimer la musique.
-  - Même question pour la dansabilité?
-
-Mise en place du jeu de donnée:
+**Mise en place du jeu de donnée:**
 ```{r}
+  library(ggplot2)
+  library(dplyr)
   dataPath <- "./Spotify_Youtube.csv"
   data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
 ```
 
-Les variables qualitatives sont les variables:
-  - Si la musique à été publiée comme un album ou un single
-  - La fréquence d'écoute d'un titre
 
+**Variables qualitative**\newline\newline
+Nous avons déduit à partir des données extraites des variables qualitatives à minima pertinente.
 
-  1. Peu écouté : Cette catégorie désigne les chansons qui ont reçu un nombre de vues inférieur ou égal à 100 millions. Cela signifie que ces chansons ont été relativement moins populaires ou ont été moins diffusées en comparaison avec d'autres chansons.
+Notre première variable qualitative est de savoir si la musique est un album ou un single, on la nomera **estAlbum**. Egalement, nous avons choisi de prendre comme variable qualitative la **fréquence d'écoute d'un titre**. Voici une définition des indicateurs de la fréquence d'écoute en accord avec l'échelle des données que nous possédons.
   
-  2. Moyen écouté : Cette catégorie concerne les chansons qui ont reçu un nombre de vues compris entre 100 millions et 500 millions. Ces chansons peuvent être considérées comme ayant une popularité moyenne ou une diffusion modérée par rapport à d'autres chansons.
+  - Peu écouté : Cette catégorie désigne les chansons qui ont reçu un nombre de vues inférieur ou égal à 100 millions. Cela signifie que ces chansons ont été relativement moins populaires ou ont été moins diffusées en comparaison avec d'autres chansons.
   
-  3. Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
+  - Moyen écouté : Cette catégorie concerne les chansons qui ont reçu un nombre de vues compris entre 100 millions et 500 millions. Ces chansons peuvent être considérées comme ayant une popularité moyenne ou une diffusion modérée par rapport à d'autres chansons.
+  
+  - Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
 
 
-Les variables quantitatives sont:\newline \newline
-  - La dancabilité d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique    \newline  \newline
-  - L'énergie est une mesure allant de 0.0 à 1.0 et représente une mesure perceptuelle de l'intensité et de l'activité dans le domaine de la musique. Typiquement, les morceaux énergiques sont ressentis comme étant rapides, bruyants et animés. Par exemple, le death metal est caractérisé par une énergie élevée, avec ses rythmes rapides, ses guitares lourdes et ses voix agressives, tandis qu'un prélude de Bach est souvent considéré comme ayant une énergie plus basse, avec ses lignes mélodiques douces et son atmosphère plus calme.
-
-Les caractéristiques perceptuelles qui contribuent à cet attribut d'énergie incluent la plage dynamique, c'est-à-dire la variation entre les niveaux sonores forts et faibles, la loudness perçue, qui correspond à la sensation de volume sonore, le timbre qui donne la qualité sonore spécifique d'un instrument ou d'une voix, le taux de début qui fait référence à la rapidité avec laquelle les sons commencent et se développent, et la densité qui décrit la quantité et l'occupation de l'espace sonore par différents éléments.
-
-En somme, l'énergie musicale est une mesure subjective qui nous aide à évaluer et à caractériser le niveau d'intensité et d'activité ressenties dans un morceau de musique.
-
-## 2. Analyse univariée
-
-### Répartitions de la variable qualitative "type album"
 ```{r}
-library(ggplot2)
-
+#Récupération de la colonne album_type (album ou single)
 album_type <- table(data$Album_type)
-df <- as.data.frame(album_type)
-df <- df[order(df$Freq, decreasing = TRUE), ]
-# Générer le pie chart
-pie_chart <- ggplot(df, aes(x = "", y = Freq, fill = Var1)) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar("y", start = 0) +
-  labs(title = "Répartition des types d'albums", fill = "Type d'album") +
-  theme_void() +
-  geom_text(aes(label = Freq), position = position_stack(vjust = 0.5), size = 4)
+album_type_df <- as.data.frame(album_type)
+album_type_df <- album_type_df[order(album_type_df$Freq, decreasing = TRUE), ]
 
-# Afficher le pie chart
-print(pie_chart)
-```
-### Répartitions de la variable qualitative noms des artistes
-
-```{r}
-library(dplyr)
-
-# Créer des catégories en fonction du nombre de vues
+#Récupération et traitement de la colonne fréquence écoute 
 data <- data %>%
   mutate(Freq_listen = case_when(
     data$Views <= 100000000 ~ "peu écouté",
@@ -85,48 +52,55 @@ data <- data %>%
     TRUE ~ NA_character_
   ))
 
-# Créer un tableau de comptage par catégorie d'écoute
-ecoute_counts <- table(data$Freq_listen)
+freq_listen <- table(data$Freq_listen)
 
-# Convertir le tableau en data frame
-ecoute_df <- as.data.frame(ecoute_counts)
-ecoute_df <- ecoute_df[order(ecoute_df$Freq, decreasing = TRUE), ]
+freq_listen_df <- as.data.frame(freq_listen)
+freq_listen_df <- freq_listen_df[order(freq_listen_df$Freq, decreasing = TRUE), ]
+```
+**Variables quantitative**\newline\newline
+Les variables quantitatives sont **la dancabilité** d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique. Puis **l'énergie** qui représente  une mesure subjective qui nous aide à évaluer et à caractériser le niveau d'intensité et d'activité ressenties dans un morceau de musique.
 
-# Générer le bar plot
-bar_plot <- ggplot(ecoute_df, aes(x = "", y = Freq, fill = Var1)) +
+## 2. Analyse univariée
+
+**Répartitions des musiques album/single**
+```{r}
+pie_chart <- ggplot(album_type_df, aes(x = "", y = Freq, fill = Var1)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "Répartition des types d'albums", fill = "Type d'album") +
+  theme_void() +
+  geom_text(aes(label = Freq), position = position_stack(vjust = 0.5), size = 4)
+
+pie_chart
+```
+
+On observe que parmis notre échantillon, il y a près de 90% musique provenant d'album et 10% de single. Les titres d'albums sont dont prédominant dans nos données.
+
+**Répartition des fréquences d'écoute**
+```{r}
+pie_chart_freq_list <- ggplot(freq_listen_df, aes(x = "", y = Freq, fill = Var1)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   labs(title = "Répartition par catégorie d'écoute", fill = "Catégorie d'écoute") +
   theme_void() +
   geom_text(aes(label = Freq), position = position_stack(vjust = 0.5), size = 4)
 
-# Afficher le bar plot
-print(bar_plot)
+pie_chart_freq_list
 ```
 
-
-```{r}
-# Générer l'histogramme à barres
-bar_histogram <- ggplot(ecoute_df, aes(x = Var1, y = Freq, fill = Var1)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  labs(title = "Répartition par catégorie d'écoute", x = "Catégorie d'écoute", y = "Fréquence") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_discrete(name = "Catégorie d'écoute")
-
-# Afficher l'histogramme à barres
-print(bar_histogram)
-```
+On peut constater que nos fréquences d'écoutes sur les différents titres de nos échantillons on la même proportion à un ou deux titres près.
 
 ### Représentation graphique de la répartition
 
 **Dancabilité**
-```{r}
-boxplot <- ggplot(data, aes(y = data$Danceability)) +
+``` {r}
+
+boxplot_danceability <- ggplot(data, aes(y = Danceability) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de la dançabilité", y = "Dançabilité") +
-  theme_minimal()
-print(boxplot)
+  theme_minimal(),
+
+boxplot_danceability
 ```
 
 En examinant le diagramme, on peut constater que la majorité des musiques analysées, soit environ 58 %, ont une danceability élevée. Cela indique que ces morceaux sont adaptés à la danse et ont un potentiel élevé pour inciter les gens à se déplacer et à bouger sur la piste de danse.
@@ -136,12 +110,13 @@ De plus, le diagramme révèle que 25 % des musiques ont un effet dansant sur en
 Enfin, il est intéressant de noter que 50 % des musiques ont un effet dansant sur une personne sur deux. Cela signifie que la danceability de ces morceaux est plus subjective et peut varier d'une personne à l'autre. Certains individus peuvent ressentir une forte envie de danser en les écoutant, tandis que d'autres peuvent ne pas être aussi réceptifs à leur effet dansant. 
 
 **Énergie**
-```{r}
-boxplot <- ggplot(data, aes(y = data$Energy)) +
+
+``` {r}
+boxplot_energy <- ggplot(data, aes(y = Energy)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
-  theme_minimal()
-print(boxplot)
+  theme_minimal(),
+boxplot_energy
 ```
 L'analyse du diagramme en boîte à moustaches révèle plusieurs informations importantes concernant l'énergie des morceaux de musique. Plus l'énergie est proche de 1.0, plus elle est rapides, fortes et bruyantes.
 
@@ -169,12 +144,15 @@ mean(dancabilite)
 
 par(mfrow=c(1,2))
 hist(dancabilite , main="repartition de la dancabilité des musiques ",xlab="dancabilite",prob=T)
-points(seq(0,30,0.01),dnorm(seq(0,30,0.01),mean(dancabilite),sd(dancabilite)),col=3,type="l")
+points(seq(0,30,0.01),dnorm(seq(0,30,0.01),mean(dancabilite),sd(dancabilite)),col=2,type="l")
 qqnorm(dancabilite)
 abline(mean(dancabilite),sd(dancabilite),col=2)
 interval=t.test(dancabilite)
 interval$conf.int
 ```
+
+
+L'histogramme représente la répartition de la danceability des morceaux de musique étudiés. La variable dancabilite a une variance (var) de 0.0210791 et une moyenne (mean) de 0.59372. Cela indique que les valeurs de danceability sont relativement concentrées autour de la moyenne et présentent une faible dispersion. 
 
 
 **Analyse de l'energie**
@@ -185,7 +163,7 @@ mean(energie)
 
 par(mfrow=c(1,2))
 hist(energie , main="repartition de l'energie des musiques ",xlab="energie",prob=T)
-points(seq(0,30,0.01),dnorm(seq(0,30,0.01),mean(energie),sd(energie)),col=2,type="l")
+points(seq(0,150,0.01),dnorm(seq(0,150,0.01),mean(energie),sd(energie)),col=2,type="l")
 qqnorm(energie)
 abline(mean(energie),sd(energie),col=2)
 interval=t.test(energie)

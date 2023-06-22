@@ -181,13 +181,13 @@ Nous avons choisi de prendre comme varaible quantitative **la dancabilité** et 
 
 • Donner les résumés statistiques, histogrammes et/ou bloxplot par sous-population.
 ```{r}
-boxplot(data$Danceability ~ data$Freq_list, main="Danceability en fonction de la fréquence d'écoute", xlab="Fréquence d'écoute", ylab="Danceability")
+boxplot(data$Danceability ~ data$Freq_listen, main="Danceability en fonction de la fréquence d'écoute", xlab="Fréquence d'écoute", ylab="Danceability")
 ```
 
 ```{r}
-summary(data$Danceability[data$Freq_list == "peu écouté"])
-summary(data$Danceability[data$Freq_list == "moyen écouté"])
-summary(data$Danceability[data$Freq_list == "très écouté"])
+summary(data$Danceability[data$Freq_listen == "peu écouté"])
+summary(data$Danceability[data$Freq_listen == "moyen écouté"])
+summary(data$Danceability[data$Freq_listen == "très écouté"])
 ```
 
 ```{r} 
@@ -196,4 +196,11 @@ hist(data$Danceability[data$Freq_listen == "peu écouté"], main="Danceability p
 hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="Danceability pour une fréquence d'écoute souvent", xlab="Danceability", ylab="Fréquence")
 
 hist(data$Danceability[data$Freq_listen == "très écouté"], main="Danceability pour une fréquence d'écoute très souvent", xlab="Danceability", ylab="Fréquence")
+```
+
+• Calculer le rapport de corrélations. Commenter.
+```{r}
+cor.test(data$Danceability, data$Freq_listen)
+#Error in cor.test.default(data$Danceability, data$Freq_listen) : 'y' must be a numeric vector
+
 ```

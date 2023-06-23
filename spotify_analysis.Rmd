@@ -235,7 +235,7 @@ Nos résultats indiquent qu'il n'y a pas de différence significative dans la da
 
 ### Analyse quali x quali
 Nous avons choisi de prendre comme varaible qualitative **estAlbum** et la **fréquence d'écoute d'un titre**.
-
+Maintenant, nous allons procéder au test d'indépendance pour évaluer s'il existe une relation significative entre ces deux variables.
 
 • Faire le tableau de contingence, proposer une représentation graphique.
 
@@ -245,7 +245,6 @@ table(data$Album_type)
 ```
 Cette répartition peut avoir une incidence sur nos conclusions, car les données ne sont pas homogènes. Il faut noter que la taille de l'échantillon de singles est relativement petite, ce qui peut affecter la représentativité de nos résultats.
 
-
 ```{r}
 # Tableau de contingence
 table_contingency <- table(data$Freq_listen, data$Album_type)
@@ -254,9 +253,11 @@ table_contingency <- table(data$Freq_listen, data$Album_type)
 print(table_contingency)
 
 # Graphique
-barplot(table_contingency, main="Fréquence d'écoute en fonction du type d'album", 
+contingency <- barplot(table_contingency, main="Fréquence d'écoute en fonction du type d'album", 
         xlab="Fréquence d'écoute", ylab="Nombre de morceaux", col=c("blue", "red", "orange"),
         legend = c("Peu écouté", "Moyen écouté", "Très écouté"))
+
+contingency
 ```
 
 Nous observons que la fréquence d'écoute des morceaux de musique ne semble pas être influencée par le fait qu'ils soient inclus dans un album ou qu'ils soient des singles. Cela indique que la présence d'un morceau dans un album ne garantit pas nécessairement qu'il sera plus écouté ou moins écouté.
@@ -264,3 +265,27 @@ Nous observons que la fréquence d'écoute des morceaux de musique ne semble pas
 Malgré que tous les singles soit dans la catégorie "Moyen écouté cela ne veut pas dire qu'un sigle sera forcement dans cette catégorie.
 
 En conclusion, les résultats actuels ne permettent pas de tirer des conclusions solides sur la relation entre le type d'album (album ou single) et la fréquence d'écoute des morceaux de musique.
+
+• Faire le test d’indépendance. Spécifier les hypothèses. Conclure ?
+
+Pour effectuer le test d'indépendance, nous formulons les hypothèses suivantes :
+
+Hypothèse nulle (H0) : La fréquence d'écoute d'un titre est indépendante du type d'album.
+Hypothèse alternative (H1) : La fréquence d'écoute d'un titre est dépendante du type d'album.
+Pour effectuer le test, nous utiliserons une analyse de chi-carré (test du chi-carré d'indépendance). Ce test nous permettra de déterminer si les différences observées entre les fréquences d'écoute et le type d'album sont statistiquement significatives.
+
+Je vais maintenant procéder à l'exécution du test d'indépendance. Veuillez patienter un instant.
+
+```{r}
+table_contingency <- table(data$Freq_listen, data$Album_type)
+
+# Test d'indépendance (chi-carré)
+result <- chisq.test(table_contingency)
+print(result)
+```
+
+Sur la base de ces résultats, nous pouvons conclure ce qui suit :
+
+La valeur de p obtenue (0.001337) est inférieure à notre seuil de significativité de 0.05. Par conséquent, nous rejetons l'hypothèse nulle selon laquelle la fréquence d'écoute d'un titre est indépendante du type d'album.
+
+Cela suggère qu'il existe une relation significative entre la fréquence d'écoute des morceaux de musique et le type d'album (album ou single). En d'autres termes, le type d'album a une influence sur la fréquence d'écoute des morceaux.

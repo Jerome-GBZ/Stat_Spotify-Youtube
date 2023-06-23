@@ -294,7 +294,6 @@ Cela suggère qu'il existe une relation significative entre la fréquence d'éco
 Noys avons choisi de prendre comme varaible quantitative **la dancabilité** et l'**energie**.
 
 • Tracer le nuage de point, tracer la droite des moindre carrés
-  
 ```{r}
   # Nuage de points
   plot(data$Danceability, data$Energy, main="Danceability en fonction de l'Energy", 
@@ -309,6 +308,9 @@ Noys avons choisi de prendre comme varaible quantitative **la dancabilité** et 
 # Calcul du coefficient de corrélation linéaire
 cor(data$Danceability, data$Energy)
 ```
+Après avoir calculé le coefficient de corrélation linéaire entre les variables "Danceability" et "Energy", nous obtenons un résultat de 0.1730491.
+
+Ce coefficient de corrélation linéaire mesure la force et la direction de la relation linéaire entre les deux variables. Dans notre cas, le coefficient de corrélation est proche de zéro, ce qui suggère une faible corrélation linéaire entre la dancabilité et l'énergie des morceaux de musique.
 
 • Tester la pertinence de la régression linéaire. Conclure
 ```{r}
@@ -318,3 +320,13 @@ model <- lm(data$Energy ~ data$Danceability)
 # Résumé des résultats
 summary(model)
 ```
+
+Après avoir effectué la régression linéaire de la variable "Energy" en fonction de la variable "Danceability" L'équation de régression obtenue est : Energy = 0.6194 + 0.2020 * Danceability. Cela signifie que pour chaque unité d'augmentation de la dancabilité, on peut s'attendre à une augmentation de 0.2020 dans l'énergie des morceaux de musique.
+
+L'estimation du coefficient d'interception est de 0.6194 avec une erreur standard de 0.1014. Ce coefficient représente la valeur de l'énergie lorsque la dancabilité est égale à zéro. De même pour l'estimation du coefficient de pente de la dancabilité est de 0.2020 avec une erreur standard de 0.1660.
+
+Le test de significativité pour la pente dancabilité montre un t-value de 1.217 et une valeur de p de 0.229. Cette valeur de p élevée indique que la relation entre la dancabilité et l'énergie n'est pas significative dans notre modèle.
+
+L'analyse de variance (F-statistic) donne une valeur de 1.482 avec un degré de liberté de 1 et 48. Le p-value associé est de 0.2294, ce qui indique que le modèle de régression dans son ensemble n'est pas significatif.
+
+Pour conclure, les résultats obtenu dans notre analyse de régression linéaire, il n'y a pas suffisamment de preuves pour soutenir la pertinence du modèle de régression linéaire pour prédire l'énergie des morceaux de musique en fonction de leur dancabilité. La dancabilité seule ne semble pas être un prédicteur significatif de l'énergie. D'autres facteurs ou variables pourraient être nécessaires pour améliorer la pertinence du modèle.

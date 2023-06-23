@@ -17,10 +17,30 @@ https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 
 
 **Mise en place du jeu de donnée:**
-```{r}
+
+```r
   library(ggplot2)
   library(dplyr)
+```
 
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
   dataPath <- "./Spotify_Youtube.csv"
   data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
 ```
@@ -39,7 +59,8 @@ Egalement, nous avons choisi de prendre comme variable qualitative la **fréquen
   - Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
 
 
-```{r}
+
+```r
 #Récupération de la colonne album_type (album ou single)
 album_type <- table(data$Album_type)
 album_type_df <- as.data.frame(album_type)
@@ -65,7 +86,8 @@ Les variables quantitatives sont **la dancabilité** d'une musique, qui est un i
 ## 2. Analyse univariée
 
 **Répartitions des musiques album/single**
-```{r}
+
+```r
 pie_chart <- ggplot(album_type_df, aes(x = "", y = Freq, fill = Var1)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
@@ -76,10 +98,13 @@ pie_chart <- ggplot(album_type_df, aes(x = "", y = Freq, fill = Var1)) +
 pie_chart
 ```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-3-1.pdf)<!-- --> 
+
 On observe que parmis notre échantillon, il y a près de 90% musique provenant d'album et 10% de single. Les titres d'albums sont dont prédominant dans nos données.
 
 **Répartition des fréquences d'écoute**
-```{r}
+
+```r
 pie_chart_freq_list <- ggplot(freq_listen_df, aes(x = "", y = Freq, fill = Var1)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
@@ -90,12 +115,15 @@ pie_chart_freq_list <- ggplot(freq_listen_df, aes(x = "", y = Freq, fill = Var1)
 pie_chart_freq_list
 ```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-4-1.pdf)<!-- --> 
+
 On peut constater que nos fréquences d'écoutes sur les différents titres de nos échantillons on la même proportion à un ou deux titres près.
 
 ### Représentation graphique de la répartition
 
 **Dancabilité**
-```{r}
+
+```r
 boxplot_danceability <- ggplot(data, aes(y = Danceability)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de la dançabilité", y = "Dançabilité") +
@@ -103,6 +131,8 @@ boxplot_danceability <- ggplot(data, aes(y = Danceability)) +
 
 boxplot_danceability
 ```
+
+![](spotify_analysis_files/figure-latex/unnamed-chunk-5-1.pdf)<!-- --> 
 
 En examinant le diagramme, on peut constater que la majorité des musiques analysées, soit environ 58 %, ont une danceability élevée. Cela indique que ces morceaux sont adaptés à la danse et ont un potentiel élevé pour inciter les gens à se déplacer et à bouger sur la piste de danse.
 
@@ -112,13 +142,16 @@ Enfin, il est intéressant de noter que 50 % des musiques ont un effet dansant s
 
 **Énergie**
 
-```{r}
+
+```r
 boxplot_energy <- ggplot(data, aes(y = Energy)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
   theme_minimal()
 boxplot_energy
 ```
+
+![](spotify_analysis_files/figure-latex/unnamed-chunk-6-1.pdf)<!-- --> 
 L'analyse du diagramme en boîte à moustaches révèle plusieurs informations importantes concernant l'énergie des morceaux de musique. Plus l'énergie est proche de 1.0, plus elle est rapides, fortes et bruyantes.
 
 En examinant les différentes parties du diagramme, nous pouvons constater que la médiane à 0.75. On peut donc conclure 75% des morceaux analysés présentent une énergie relativement élevée supérieur à 0.67.
@@ -135,19 +168,44 @@ En se basant sur cette observation, il est intéressant de noter que les musique
 ## Estimation et intervalles de confiance
 
 **Analyse de la dancabilité**
-```{r}
+
+```r
 dancabilite  <- data$Danceability
 
 var(dancabilite)
-mean(dancabilite)
+```
 
+```
+## [1] 0.0210791
+```
+
+```r
+mean(dancabilite)
+```
+
+```
+## [1] 0.59372
+```
+
+```r
 par(mfrow=c(1,2))
 hist(dancabilite , main="repartition de la dancabilité des musiques ",xlab="dancabilite",prob=T)
 points(seq(0,30,0.01),dnorm(seq(0,30,0.01),mean(dancabilite),sd(dancabilite)),col=2,type="l")
 qqnorm(dancabilite)
 abline(mean(dancabilite),sd(dancabilite),col=2)
+```
+
+![](spotify_analysis_files/figure-latex/unnamed-chunk-7-1.pdf)<!-- --> 
+
+```r
 interval=t.test(dancabilite)
 interval$conf.int
+```
+
+```
+## [1] 0.5524585 0.6349815
+## attr(,"conf.level")
+## [1] 0.95
 ```
 
 
@@ -155,20 +213,44 @@ L'histogramme représente la répartition de la danceability des morceaux de mus
 
 
 **Analyse de l'energie**
-```{r}
+
+```r
 energie <- data$Energy
 
 var(energie)
+```
+
+```
+## [1] 0.02873404
+```
+
+```r
 mean(energie)
+```
 
+```
+## [1] 0.73938
+```
 
+```r
 par(mfrow=c(1,2))
 hist(energie , main="repartition de l'energie des musiques ",xlab="energie",prob=T)
 points(seq(0,150,0.01),dnorm(seq(0,150,0.01),mean(energie),sd(energie)),col=2,type="l")
 qqnorm(energie)
 abline(mean(energie),sd(energie),col=2)
+```
+
+![](spotify_analysis_files/figure-latex/unnamed-chunk-8-1.pdf)<!-- --> 
+
+```r
 interval=t.test(energie)
 interval$conf.int
+```
+
+```
+## [1] 0.6912055 0.7875545
+## attr(,"conf.level")
+## [1] 0.95
 ```
   
   
@@ -180,32 +262,65 @@ interval$conf.int
 Nous avons choisi de prendre comme varaible quantitative **la dancabilité** et comme qualitative la **fréquence d'écoute d'un titre**.
 
 • Donner les résumés statistiques, histogrammes et/ou bloxplot par sous-population.
-```{r}
+
+```r
 boxplot(data$Danceability ~ data$Freq_listen, main="Danceability en fonction de la fréquence d'écoute", xlab="Fréquence d'écoute", ylab="Danceability")
 ```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-9-1.pdf)<!-- --> 
+
 On observe une répartition assez similaire entre les musiques moyennement écoutées et les musiques très écoutées. Cependant, la variable qui se démarque le plus est celle des musiques moyennement écoutées, qui présente une danseabilité supérieure aux deux autres variables. Toutefois, cette variable présente également une plus grande dispersion que les deux autres. En effet, son premier quartile se situe à une danseabilité de 0.3 et son troisième quartile à 0.9, avec une médiane aux alentours de 0.7. En revanche, pour les deux autres variables, le premier quartile se situe aux alentours de 0.45 et le troisième quartile aux alentours de 0.7.
 
-```{r}
+
+```r
 summary(data$Danceability[data$Freq_listen == "peu écouté"])
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.3710  0.5120  0.6660  0.6312  0.7260  0.9250
+```
+
+```r
 summary(data$Danceability[data$Freq_listen == "moyen écouté"])
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.4270  0.5210  0.5730  0.5825  0.6390  0.7600
+```
+
+```r
 summary(data$Danceability[data$Freq_listen == "très écouté"])
 ```
 
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.2090  0.4873  0.5615  0.5677  0.6162  0.9020
+```
+
 **Dancabilité par fréquence d'écoute:**
-```{r} 
+
+```r
 par(mfrow=c(1,3))
 hist(data$Danceability[data$Freq_listen == "peu écouté"], main="peu écouté", xlab="Danceability", ylab="Fréquence")
 hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="moyen écouté", xlab="Danceability", ylab="Fréquence")
 hist(data$Danceability[data$Freq_listen == "très écouté"], main="très écouté", xlab="Danceability", ylab="Fréquence")
 ```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-11-1.pdf)<!-- --> 
+
 **Calcule des rapports de corrélations:**
-```{r}
+
+```r
 data$Freq_listen_numeric <- factor(data$Freq_listen)
 data$Freq_listen_numeric <- as.numeric(data$Freq_listen_numeric)
 correlation <- cor(dancabilite, data$Freq_listen_numeric, use = "pairwise.complete.obs")
 correlation
+```
+
+```
+## [1] -0.0513819
 ```
 
 Il existe une corrélation très faible et négative (-0.0513819) entre la fréquence d'écoute et la danseabilité des musiques. Cela suggère qu'il n'y a pas de relation significative entre ces deux variables dans l'échantillon étudié. En d'autres termes, la fréquence d'écoute d'une musique ne semble pas être un facteur déterminant de sa danseabilité, du moins dans le contexte de ce jeu de données spécifique.
@@ -223,12 +338,19 @@ Hypothèse nulle (H0) : Il n'y a pas de différence significative entre les moye
 
 Hypothèse alternative (H1) : Il existe une différence significative entre au moins deux des moyennes des groupes de fréquence d'écoute.
 
-```{r}
+
+```r
 # Effectuer le test d'ANOVA
 model <- aov(Danceability ~ Freq_listen, data = data)
 
 # Résumé des résultats
 summary(model)
+```
+
+```
+##             Df Sum Sq Mean Sq F value Pr(>F)
+## Freq_listen  2 0.0379 0.01896   0.896  0.415
+## Residuals   47 0.9950 0.02117
 ```
 
 Nous avons utilisé un seuil de signification de 0,05 pour évaluer la différence entre les groupes. La valeur p calculée pour notre test est de 0,723, ce qui est supérieur à notre seuil de signification. Cela signifie que nous n'avons pas trouvé suffisamment de preuves statistiques pour rejeter l'hypothèse nulle.
@@ -242,24 +364,50 @@ Maintenant, nous allons procéder au test d'indépendance pour évaluer s'il exi
 • Faire le tableau de contingence, proposer une représentation graphique.
 
 Lors de l'analyse de notre jeu de données, nous avons constaté que la répartition entre les singles et les albums était déséquilibrée, avec seulement 6 singles (12%) et 44 albums (88%) :
-```{r}
+
+```r
 table(data$Album_type)
+```
+
+```
+## 
+##  album single 
+##     44      6
 ```
 Cette répartition peut avoir une incidence sur nos conclusions, car les données ne sont pas homogènes. Il faut noter que la taille de l'échantillon de singles est relativement petite, ce qui peut affecter la représentativité de nos résultats.
 
-```{r}
+
+```r
 # Tableau de contingence
 table_contingency <- table(data$Freq_listen, data$Album_type)
 
 # Affichage du tableau de contingence
 print(table_contingency)
+```
 
+```
+##               
+##                album single
+##   moyen écouté    15      0
+##   peu écouté      11      6
+##   très écouté     18      0
+```
+
+```r
 # Graphique
 contingency <- barplot(table_contingency, main="Fréquence d'écoute en fonction du type d'album", 
         xlab="Fréquence d'écoute", ylab="Nombre de morceaux", col=c("blue", "red", "orange"),
         legend = c("Peu écouté", "Moyen écouté", "Très écouté"))
+```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-15-1.pdf)<!-- --> 
+
+```r
 contingency
+```
+
+```
+## [1] 0.7 1.9
 ```
 
 Nous observons que la fréquence d'écoute des morceaux de musique ne semble pas être influencée par le fait qu'ils soient inclus dans un album ou qu'ils soient des singles. Cela indique que la présence d'un morceau dans un album ne garantit pas nécessairement qu'il sera plus écouté ou moins écouté.
@@ -278,12 +426,29 @@ Pour effectuer le test, nous utiliserons une analyse de chi-carré (test du chi-
 
 Je vais maintenant procéder à l'exécution du test d'indépendance. Veuillez patienter un instant.
 
-```{r}
+
+```r
 table_contingency <- table(data$Freq_listen, data$Album_type)
 
 # Test d'indépendance (chi-carré)
 result <- chisq.test(table_contingency)
+```
+
+```
+## Warning in chisq.test(table_contingency): Chi-squared approximation may be
+## incorrect
+```
+
+```r
 print(result)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  table_contingency
+## X-squared = 13.235, df = 2, p-value = 0.001337
 ```
 
 Sur la base de ces résultats, nous pouvons conclure ce qui suit :
@@ -296,7 +461,8 @@ Cela suggère qu'il existe une relation significative entre la fréquence d'éco
 Noys avons choisi de prendre comme varaible quantitative **la dancabilité** et l'**energie**.
 
 • Tracer le nuage de point, tracer la droite des moindre carrés
-```{r}
+
+```r
   # Nuage de points
   plot(data$Danceability, data$Energy, main="Danceability en fonction de l'Energy", 
       xlab="Danceability", ylab="Energy", pch=19)
@@ -305,22 +471,51 @@ Noys avons choisi de prendre comme varaible quantitative **la dancabilité** et 
   abline(lm(data$Energy ~ data$Danceability), col="red")
 ```
 
+![](spotify_analysis_files/figure-latex/unnamed-chunk-17-1.pdf)<!-- --> 
+
 • Calculer le coefficient de corrélation linéaire
-```{r}
+
+```r
 # Calcul du coefficient de corrélation linéaire
 cor(data$Danceability, data$Energy)
+```
+
+```
+## [1] 0.1730491
 ```
 Après avoir calculé le coefficient de corrélation linéaire entre les variables "Danceability" et "Energy", nous obtenons un résultat de 0.1730491.
 
 Ce coefficient de corrélation linéaire mesure la force et la direction de la relation linéaire entre les deux variables. Dans notre cas, le coefficient de corrélation est proche de zéro, ce qui suggère une faible corrélation linéaire entre la dancabilité et l'énergie des morceaux de musique.
 
 • Tester la pertinence de la régression linéaire. Conclure
-```{r}
+
+```r
 # Régression linéaire
 model <- lm(data$Energy ~ data$Danceability)
 
 # Résumé des résultats
 summary(model)
+```
+
+```
+## 
+## Call:
+## lm(formula = data$Energy ~ data$Danceability)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.42638 -0.08757 -0.01924  0.13110  0.29859 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)         0.6194     0.1014   6.109 1.71e-07 ***
+## data$Danceability   0.2020     0.1660   1.217    0.229    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1687 on 48 degrees of freedom
+## Multiple R-squared:  0.02995,	Adjusted R-squared:  0.009737 
+## F-statistic: 1.482 on 1 and 48 DF,  p-value: 0.2294
 ```
 
 Après avoir effectué la régression linéaire de la variable "Energy" en fonction de la variable "Danceability" L'équation de régression obtenue est : Energy = 0.6194 + 0.2020 * Danceability. Cela signifie que pour chaque unité d'augmentation de la dancabilité, on peut s'attendre à une augmentation de 0.2020 dans l'énergie des morceaux de musique.

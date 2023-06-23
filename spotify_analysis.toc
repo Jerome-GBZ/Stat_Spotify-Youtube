@@ -1,0 +1,7 @@
+\contentsline {subsection}{1. Introduction}{1}{section*.2}%
+\contentsline {subsection}{2. Analyse univariée}{2}{section*.3}%
+\contentsline {subsubsection}{Représentation graphique de la répartition}{4}{section*.4}%
+\contentsline {subsection}{3. Analyse multivariée}{9}{section*.5}%
+\contentsline {subsubsection}{Analyse quanti x quali}{9}{section*.6}%
+\contentsline {subsubsection}{Analyse quali x quali}{11}{section*.7}%
+\contentsline {subsubsection}{Analyse quanti x quanti}{13}{section*.8}%

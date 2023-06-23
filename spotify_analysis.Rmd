@@ -161,19 +161,23 @@ energie <- data$Energy
 var(energie)
 mean(energie)
 
-
 par(mfrow=c(1,2))
-hist(energie , main="repartition de l'energie des musiques ",xlab="energie",prob=T)
-points(seq(0,150,0.01),dnorm(seq(0,150,0.01),mean(energie),sd(energie)),col=2,type="l")
+
+hist(energie, main="Répartition énergie", xlab="Énergie", prob=T, ylim=c(0, 2.5), xlim=c(0, 1.5))
+points(seq(0, 150, 0.01), dnorm(seq(0, 150, 0.01), mean(energie), sd(energie)), col=2, type="l")
+
 qqnorm(energie)
-abline(mean(energie),sd(energie),col=2)
-interval=t.test(energie)
+abline(mean(energie), sd(energie), col=2)
+
+interval <- t.test(energie)
 interval$conf.int
 ```
-  
-  
-  
-  
+Dans cette analyse, nous nous sommes intéressés à la répartition de l'énergie dans les morceaux de musique.
+
+La variance de l'énergie est de 0.0287, ce qui indique une certaine dispersion des valeurs autour de la moyenne. La moyenne de l'énergie est de 0.7394, ce qui représente un niveau moyen d'énergie dans les morceaux étudiés.
+
+L'histogramme de la répartition de l'énergie dans les morceaux de musique met en évidence que la majorité des valeurs se concentrent autour d'une moyenne de 0.73938, avec une variance de 0.02873404. De plus, en utilisant la loi normale comme référence dans notre analyse, nous remarquons que la distribution des données présente une tendance à suivre approximativement une courbe en forme de cloche, ce qui suggère que la répartition de l'énergie dans les morceaux peut être caractérisée par cette distribution.
+
 ## 3. Analyse multivariée
 
 ### Analyse quanti x quali
@@ -259,6 +263,7 @@ contingency <- barplot(table_contingency, main="Fréquence d'écoute en fonction
         xlab="Fréquence d'écoute", ylab="Nombre de morceaux", col=c("blue", "red", "orange"),
         legend = c("Peu écouté", "Moyen écouté", "Très écouté"))
 
+# Affichage du graphique de contingence
 contingency
 ```
 
@@ -314,7 +319,7 @@ Après avoir calculé le coefficient de corrélation linéaire entre les variabl
 
 Ce coefficient de corrélation linéaire mesure la force et la direction de la relation linéaire entre les deux variables. Dans notre cas, le coefficient de corrélation est proche de zéro, ce qui suggère une faible corrélation linéaire entre la dancabilité et l'énergie des morceaux de musique.
 
-• Tester la pertinence de la régression linéaire. Conclure
+• Tester la pertinence de la régression linéaire.
 ```{r}
 # Régression linéaire
 model <- lm(data$Energy ~ data$Danceability)

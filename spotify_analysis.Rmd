@@ -289,3 +289,32 @@ Sur la base de ces résultats, nous pouvons conclure ce qui suit :
 La valeur de p obtenue (0.001337) est inférieure à notre seuil de significativité de 0.05. Par conséquent, nous rejetons l'hypothèse nulle selon laquelle la fréquence d'écoute d'un titre est indépendante du type d'album.
 
 Cela suggère qu'il existe une relation significative entre la fréquence d'écoute des morceaux de musique et le type d'album (album ou single). En d'autres termes, le type d'album a une influence sur la fréquence d'écoute des morceaux.
+
+### Analyse quanti x quanti
+Noys avons choisi de prendre comme varaible quantitative **la dancabilité** et l'**energie**.
+
+• Tracer le nuage de point, tracer la droite des moindre carrés
+  
+```{r}
+  # Nuage de points
+  plot(data$Danceability, data$Energy, main="Danceability en fonction de l'Energy", 
+      xlab="Danceability", ylab="Energy", pch=19)
+
+  # Droite des moindres carrés
+  abline(lm(data$Energy ~ data$Danceability), col="red")
+```
+
+• Calculer le coefficient de corrélation linéaire
+```{r}
+# Calcul du coefficient de corrélation linéaire
+cor(data$Danceability, data$Energy)
+```
+
+• Tester la pertinence de la régression linéaire. Conclure
+```{r}
+# Régression linéaire
+model <- lm(data$Energy ~ data$Danceability)
+
+# Résumé des résultats
+summary(model)
+```

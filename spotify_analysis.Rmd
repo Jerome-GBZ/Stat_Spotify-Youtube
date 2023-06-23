@@ -95,11 +95,10 @@ On peut constater que nos fréquences d'écoutes sur les différents titres de n
 
 **Dancabilité**
 ```{r}
-
-boxplot_danceability <- ggplot(data, aes(y = Danceability) +
+boxplot_danceability <- ggplot(data, aes(y = Danceability)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de la dançabilité", y = "Dançabilité") +
-  theme_minimal(),
+  theme_minimal()
 
 boxplot_danceability
 ```
@@ -116,7 +115,7 @@ Enfin, il est intéressant de noter que 50 % des musiques ont un effet dansant s
 boxplot_energy <- ggplot(data, aes(y = Energy)) +
   geom_boxplot(fill = "lightblue", color = "black") +
   labs(title = "Distribution de l'energie d'une musique", y = "Énergie") +
-  theme_minimal(),
+  theme_minimal()
 boxplot_energy
 ```
 L'analyse du diagramme en boîte à moustaches révèle plusieurs informations importantes concernant l'énergie des morceaux de musique. Plus l'énergie est proche de 1.0, plus elle est rapides, fortes et bruyantes.
@@ -190,33 +189,27 @@ summary(data$Danceability[data$Freq_listen == "moyen écouté"])
 summary(data$Danceability[data$Freq_listen == "très écouté"])
 ```
 
+**Dancabilité par fréquence d'écoute:**
 ```{r} 
-hist(data$Danceability[data$Freq_listen == "peu écouté"], main="Danceability pour une fréquence d'écoute parfois", xlab="Danceability", ylab="Fréquence")
-
-hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="Danceability pour une fréquence d'écoute souvent", xlab="Danceability", ylab="Fréquence")
-
-hist(data$Danceability[data$Freq_listen == "très écouté"], main="Danceability pour une fréquence d'écoute très souvent", xlab="Danceability", ylab="Fréquence")
+par(mfrow=c(1,3))
+hist(data$Danceability[data$Freq_listen == "peu écouté"], main="peu écouté", xlab="Danceability", ylab="Fréquence")
+hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="moyen écouté", xlab="Danceability", ylab="Fréquence")
+hist(data$Danceability[data$Freq_listen == "très écouté"], main="très écouté", xlab="Danceability", ylab="Fréquence")
 ```
 
-• Calculer le rapport de corrélations.
+**Calcule des rapports de corrélations:**
 ```{r}
-# Convert Freq_listen to a factor
 data$Freq_listen_numeric <- factor(data$Freq_listen)
-
-# Convert Freq_listen to numeric
 data$Freq_listen_numeric <- as.numeric(data$Freq_listen_numeric)
-
-# Calculate correlation
-correlation <- cor(data$Danceability, data$Freq_listen_numeric, use = "pairwise.complete.obs")
-
+correlation <- cor(dancabilite, data$Freq_listen_numeric, use = "pairwise.complete.obs")
 correlation
 ```
-Le résultat obtenu pour la corrélation entre la danseabilité des morceaux de musique et leur fréquence d'écoute est de -0.0513819. Ce coefficient de corrélation suggère une faible relation négative entre ces deux variables.
+
+Il existe une corrélation très faible et négative (-0.0513819) entre la fréquence d'écoute et la danseabilité des musiques. Cela suggère qu'il n'y a pas de relation significative entre ces deux variables dans l'échantillon étudié. En d'autres termes, la fréquence d'écoute d'une musique ne semble pas être un facteur déterminant de sa danseabilité, du moins dans le contexte de ce jeu de données spécifique.
 
 Cela signifie que, d'après les données analysées, il n'existe qu'une très légère tendance indiquant que plus un morceau de musique est écouté fréquemment, moins il est susceptible d'être dansant. Cependant, il est important de noter que cette corrélation est proche de zéro, ce qui suggère qu'il n'y a pas de relation linéaire significative entre la danseabilité et la fréquence d'écoute des morceaux.
 
 Ce résultat suggère qu'il y a pas de preuve pour dire qu'une fréquence d'écoute élevée soit directement liée à une danseabilité. 
-
 
 
 • Faire le test d’égalité des moyennes. Spécifier les hypothèses. Conclure ?

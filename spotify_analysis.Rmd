@@ -379,3 +379,13 @@ Le test de significativité pour la pente dancabilité montre un t-value de 1.21
 L'analyse de variance (F-statistic) donne une valeur de 1.482 avec un degré de liberté de 1 et 48. Le p-value associé est de 0.2294, ce qui indique que le modèle de régression dans son ensemble n'est pas significatif.
 
 Pour conclure, les résultats obtenu dans notre analyse de régression linéaire, il n'y a pas suffisamment de preuves pour soutenir la pertinence du modèle de régression linéaire pour prédire l'énergie des morceaux de musique en fonction de leur dancabilité. La dancabilité seule ne semble pas être un prédicteur significatif de l'énergie. D'autres facteurs ou variables pourraient être nécessaires pour améliorer la pertinence du modèle.
+
+
+## 4. Conclusion
+
+En conclusion, notre projet visait à explorer la possibilité d'identifier des caractéristiques musicales communes parmi les titres les plus appréciés par les utilisateurs.
+Après avoir analysé les données, nos résultats indiquent qu'il n'y a pas de différence significative dans la danseabilité des morceaux de musique en fonction de la fréquence d'écoute.
+Cela suggère que la danseabilité ne semble pas être un critère déterminant dans la popularité des titres.
+
+Par ailleurs, nos résultats mettent en évidence une relation significative entre la fréquence d'écoute des morceaux de musique et le type d'album (album ou single).
+Cette observation suggère que les utilisateurs ont tendance à écouter plus fréquemment des singles plutôt que des musiques qui sont dans un album.

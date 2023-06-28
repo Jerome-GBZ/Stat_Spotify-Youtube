@@ -1,7 +1,7 @@
 ---
 title: "Projet Calcul Financier & Statistique : En avant la musique !"
 author: "MAHI Riad & Jérôme GAMBIEZ"
-date: "Mise à jour, le 25 Mai 2023"
+date: "Mise à jour, le 28 Juin 2023"
 output:
   pdf_document:
     toc: yes
@@ -10,47 +10,74 @@ output:
 ---
 ## 1. Introduction
 
-Pour ce devoir de stastique nous avons choisi un sujet un peu original qui est d'utiliser des musiques provenant de site de streaming connu comme Spotify ou encore Youtube. Notre travail va être d'analyser un jeu de donnée de 50 titres parmis les 5 artistes les plus connus des plateforme afin d'en déduire une analyse sur des questions qu'on a pu se poser notamment la corrélation entre genre en dancabilité. En effet, plusieurs questions nous sont venu lors de la première étude du jeu de donnée mais également en cours de route notammen, est-ce l'energie et la dansabilité d'une musique ont une relation ? Est-ce l'énergie d'une musique à un impact sur la sensibilité d'un utilisateur à aimer la musique ? Même question pour la dansabilité?   \newline
+Pour ce projet statistique, nous avons choisi un sujet original consistant à utiliser des musiques provenant de sites de streaming populaires tels que Spotify ou YouTube. 
+Notre objectif est d'analyser un jeu de données composé de 50 titres parmi les cinq artistes les plus connus sur ces plateformes, afin d'en déduire une analyse répondant à certaines questions comme notamment : 
+  - Qu'elle est la corrélation entre le genre musical et la dansabilité ?
+  - Qu'elle est la relation entre l'énergie et la dansabilité d'une musique ? 
+  - Est-ce que l'énergie d'une musique influence la propension d'un utilisateur à l'apprécier ? 
+  - Est-ce que l'énergie d'une musique influence la dansabilité ?
+
+Au cours de cette étude, nous allons approfondir notre compréhension sur les éventuelles interconnexions entre eux.
+
+Peut-on identifier des caractéristiques musicales communes parmi les titres les plus appréciés par les utilisateurs  ?
+Nous y répondrons en analysant les données de manière univariée, bivariée et multivariée.
 
 La source de notre jeu de donnée provient du site Kaggle.com: \newline
 https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 
-
 **Mise en place du jeu de donnée:**
 ```{r}
-  library(ggplot2)
-  library(dplyr)
+library(ggplot2)
+library(dplyr)
 
-  dataPath <- "./Spotify_Youtube.csv"
-  data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
+dataPath <- "./Spotify_Youtube.csv"
+data <- read.csv(dataPath, header=TRUE, stringsAsFactors=FALSE, nrows=50)
+
+# Création d'un nouveau jeu de données avec les colonnes sélectionnées
+data <- data %>%
+  select(Danceability, Energy, Views, Album_type)
+
+# Affichage les premières lignes du nouveau jeu de données
+head(data)
 ```
 
+**Netoyage des données**\newline\newline
+Le jeu de données était plutot propre dans ca globalité, il ne manquait aucun ligne et aucune colonne. 
+Cependant, nous avons décidé de supprimer les colonnes qui ne nous semblaient pas pertinentes pour notre étude. 
+Nous avons décidé de garder uniquement les colonnes suivantes :
+  - Danceability
+  - Energy
+  - Views
+  - Album_type
 
-**Variables qualitative**\newline\newline
-Nous avons déduit à partir des données extraites des variables qualitatives à minima pertinente.
+Et nous avons du recoder la colonne "Views" qui était le nombre de vues de la musique en "Freq_listen".
+Car c'était une variable quantitative et nous avons décidé de la transformer en variable qualitative. 
+"Freq_listen" est représenté en trois catégories : Peu écouté / Moyennement écouté / Très écouté.
 
-Notre première variable qualitative est de savoir si la musique est un album ou un single, on la nomera **estAlbum**. 
-Egalement, nous avons choisi de prendre comme variable qualitative la **fréquence d'écoute d'un titre**. Voici une définition des indicateurs de la fréquence d'écoute en accord avec l'échelle des données que nous possédons.
-  
-  - Peu écouté : Cette catégorie désigne les chansons qui ont reçu un nombre de vues inférieur ou égal à 100 millions. Cela signifie que ces chansons ont été relativement moins populaires ou ont été moins diffusées en comparaison avec d'autres chansons.
-  
-  - Moyen écouté : Cette catégorie concerne les chansons qui ont reçu un nombre de vues compris entre 100 millions et 500 millions. Ces chansons peuvent être considérées comme ayant une popularité moyenne ou une diffusion modérée par rapport à d'autres chansons.
-  
-  - Très écouté : Cette catégorie comprend les chansons qui ont accumulé un nombre de vues supérieur à 500 millions. Ces chansons sont considérées comme ayant une grande popularité ou une diffusion élevée, attirant un grand nombre de spectateurs ou d'auditeurs.
+Dans notre étude, nous avons sélectionné deux variables qualitatives : "Album_type" et "Freq_listen".
 
+La variable "Album_type" indique si la musique est issue d'un album ou si c'est un single. Cette information nous permet de distinguer les différentes formes de publication des titres musicaux.
+
+La variable "Freq_listen" représente la fréquence d'écoute des titres. Nous avons converti la variable quantitative initiale "Views" (nombre de vues) en une variable qualitative pour simplifier l'analyse.
+Nous avons divisé les titres en trois catégories :
+  - "Peu écouté" : Cette catégorie regroupe les titres qui ont accumulé un nombre de vues inférieur ou égal à 100 millions. Ces titres peuvent être considérés comme moins populaires ou moins diffusés.
+  - "Moyennement écouté" : Cette catégorie concerne les titres qui ont reçu un nombre de vues compris entre 100 millions et 500 millions. Ces titres ont une popularité moyenne.
+  - "Très écouté" : Cette catégorie englobe les titres qui ont accumulé un nombre de vues supérieur à 500 millions. Ces titres sont considérés comme très populaires ou ayant une diffusion élevée. 
+  
+En utilisant ces variables qualitatives, nous pourrons examiner les relations entre les caractéristiques musicales et la popularité des titres, ainsi que les différences entre les albums et les singles.
 
 ```{r}
-#Récupération de la colonne album_type (album ou single)
+# Récupération de la colonne album_type (album ou single)
 album_type <- table(data$Album_type)
 album_type_df <- as.data.frame(album_type)
 album_type_df <- album_type_df[order(album_type_df$Freq, decreasing = TRUE), ]
 
-#Récupération et traitement de la colonne fréquence écoute 
+# Récupération et traitement de la colonne fréquence écoute 
 data <- data %>%
   mutate(Freq_listen = case_when(
-    data$Views <= 100000000 ~ "peu écouté",
-    data$Views > 100000000 & data$Views <= 500000000 ~ "moyen écouté",
-    data$Views > 500000000 ~ "très écouté",
+    data$Views <= 100000000 ~ "Peu écouté",
+    data$Views > 100000000 & data$Views <= 500000000 ~ "Moyennement écouté",
+    data$Views > 500000000 ~ "Très écouté",
     TRUE ~ NA_character_
   ))
 
@@ -59,8 +86,17 @@ freq_listen <- table(data$Freq_listen)
 freq_listen_df <- as.data.frame(freq_listen)
 freq_listen_df <- freq_listen_df[order(freq_listen_df$Freq, decreasing = TRUE), ]
 ```
+
 **Variables quantitative**\newline\newline
-Les variables quantitatives sont **la dancabilité** d'une musique, qui est un indicateur sur la probabilité de dancer sur une musique. Puis **l'énergie** qui représente  une mesure subjective qui nous aide à évaluer et à caractériser le niveau d'intensité et d'activité ressenties dans un morceau de musique.
+Les variables quantitatives que nous avons sélectionnées pour notre étude sont la "Danceability" (dansabilité) et l'"Energy" (énergie) d'une musique.
+
+La "Danceability" est un indicateur quantitatif qui mesure la probabilité de danser sur une musique.
+Elle peut varier de 0 à 1, où une valeur proche de 1 indique une musique facilement dansable et une valeur proche de 0 indique une musique moins propice à la danse.
+
+"L'Energy" représente également une mesure quantitative qui évalue le niveau d'intensité et d'activité ressenties dans un morceau de musique. 
+Elle peut également varier de 0 à 1, où une valeur élevée indique une musique énergique et intense, tandis qu'une valeur plus faible indique une musique plus calme ou apaisante.
+
+En analysant ces variables quantitatives, nous pourrons examiner la corrélation entre le genre musical et la dansabilité, ainsi que la relation entre l'énergie et la dansabilité d'une musique. 
 
 ## 2. Analyse univariée
 
@@ -76,7 +112,8 @@ pie_chart <- ggplot(album_type_df, aes(x = "", y = Freq, fill = Var1)) +
 pie_chart
 ```
 
-On observe que parmis notre échantillon, il y a près de 90% musique provenant d'album et 10% de single. Les titres d'albums sont dont prédominant dans nos données.
+On observe que parmis notre échantillon, il y a près de 88% musique provenant d'album et 12% de single. 
+Les titres d'albums sont dont prédominant dans nos données.
 
 **Répartition des fréquences d'écoute**
 ```{r}
@@ -90,7 +127,12 @@ pie_chart_freq_list <- ggplot(freq_listen_df, aes(x = "", y = Freq, fill = Var1)
 pie_chart_freq_list
 ```
 
-On peut constater que nos fréquences d'écoutes sur les différents titres de nos échantillons on la même proportion à un ou deux titres près.
+D'après la répartition des fréquences d'écoute dans notre échantillon, nous pouvons observer que les musiques sont relativement équilibrées entre les différentes catégories d'écoute.
+"Peu écouté" => 36%
+"Moyennement écouté" => 30%
+"Très écouté" => 34%
+
+Cette répartition équilibrée des fréquences d'écoute nous permettrons d'évaluer si ces caractéristiques ont une influence sur la popularité des titres.
 
 ### Représentation graphique de la répartition
 
@@ -199,9 +241,9 @@ summary(data$Danceability[data$Freq_listen == "très écouté"])
 **Dancabilité par fréquence d'écoute:**
 ```{r} 
 par(mfrow=c(1,3))
-hist(data$Danceability[data$Freq_listen == "peu écouté"], main="peu écouté", xlab="Danceability", ylab="Fréquence")
-hist(data$Danceability[data$Freq_listen == "moyen écouté"], main="moyen écouté", xlab="Danceability", ylab="Fréquence")
-hist(data$Danceability[data$Freq_listen == "très écouté"], main="très écouté", xlab="Danceability", ylab="Fréquence")
+hist(data$Danceability[data$Freq_listen == "Peu écouté"], main="Peu écouté", xlab="Danceability", ylab="Fréquence")
+hist(data$Danceability[data$Freq_listen == "Moyennement écouté"], main="Moyennement écouté", xlab="Danceability", ylab="Fréquence")
+hist(data$Danceability[data$Freq_listen == "Très écouté"], main="Très écouté", xlab="Danceability", ylab="Fréquence")
 ```
 
 **Calcule des rapports de corrélations:**
@@ -240,7 +282,7 @@ Nous avons utilisé un seuil de signification de 0,05 pour évaluer la différen
 Nos résultats indiquent qu'il n'y a pas de différence significative dans la danseabilité des morceaux de musique en fonction de la fréquence d'écoute. Autrement dit, que les morceaux soient peu écoutés, moyennement écoutés ou très écoutés, cela n'a pas d'impact statistiquement significatif sur leur danseabilité.
 
 ### Analyse quali x quali
-Nous avons choisi de prendre comme varaible qualitative **estAlbum** et la **fréquence d'écoute d'un titre**.
+Nous avons choisi de prendre comme varaible qualitative **Album_type** et la **fréquence d'écoute d'un titre**.
 Maintenant, nous allons procéder au test d'indépendance pour évaluer s'il existe une relation significative entre ces deux variables.
 
 • Faire le tableau de contingence, proposer une représentation graphique.
@@ -261,7 +303,7 @@ print(table_contingency)
 # Graphique
 contingency <- barplot(table_contingency, main="Fréquence d'écoute en fonction du type d'album", 
         xlab="Fréquence d'écoute", ylab="Nombre de morceaux", col=c("blue", "red", "orange"),
-        legend = c("Peu écouté", "Moyen écouté", "Très écouté"))
+        legend = c("Peu écouté", "Moyennement écouté", "Très écouté"))
 
 # Affichage du graphique de contingence
 contingency
@@ -269,7 +311,7 @@ contingency
 
 Nous observons que la fréquence d'écoute des morceaux de musique ne semble pas être influencée par le fait qu'ils soient inclus dans un album ou qu'ils soient des singles. Cela indique que la présence d'un morceau dans un album ne garantit pas nécessairement qu'il sera plus écouté ou moins écouté.
 
-Malgré que tous les singles soit dans la catégorie "Moyen écouté cela ne veut pas dire qu'un sigle sera forcement dans cette catégorie.
+Malgré que tous les singles soit dans la catégorie "Moyennement écouté" cela ne veut pas dire qu'un sigle sera forcement dans cette catégorie.
 
 En conclusion, les résultats actuels ne permettent pas de tirer des conclusions solides sur la relation entre le type d'album (album ou single) et la fréquence d'écoute des morceaux de musique.
 
